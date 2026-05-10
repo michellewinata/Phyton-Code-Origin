@@ -1,14 +1,12 @@
 import re
 import numpy as np
 import pandas as pd
-import torch
+import pickle
+import gdown
+import os
 import streamlit as st
-from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModel
 from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score
 
 # Constants
@@ -20,6 +18,18 @@ LABEL_BADGE = {
     'MACHINE_GENERATED': '<span class="badge badge-ai">🤖 AI Generated</span>',
     'MACHINE_REFINED'  : '<span class="badge badge-hybrid">🔀 Hybrid (AI Refined)</span>',
 }
+
+# Load Model
+@st.cache_resource
+def load_models():
+    path = 'models.pkl'
+    if not os.path.exists(path):
+        gdown.download(
+            "https://drive.google.com/uc?id=1pvJUr5S8YhIbdK6kQBRFDFhKZ0DsdmG-",
+            path, quiet=False
+        )
+    with open(path, 'rb') as f:
+        return pickle.load(f)
 
 # Stylometric
 def extract_stylometric(code):
@@ -224,25 +234,29 @@ st.divider()
 # Sidebar
 with st.sidebar:
     st.header("⚙️ Setup Model")
-    st.info("Train the model first from the sidebar.")
-
+    
     if st.session_state.models is None:
-        if st.button("🚀 Train Model", use_container_width=True, type="primary"):
-            log_box = st.empty()
-            logs    = []
+        with st.spinner("Loading models..."):
+            try:
+                st.session_state.models = load_models()
+                st.rerun()
+            except Exception as e:
+                st.error(f"Gagal load model: {e}")
+    else:
+        st.success("✅ Model is ready!")
+        models = st.session_state.models
 
-            def progress_cb(msg):
-                logs.append(msg)
-                log_box.text("\n".join(logs))
+        y_pred_rf    = models['rf'].predict(models['X_test_s'])
+        y_pred_fused = models['svm_fused'].predict(models['X_test_fused'])
 
-            with st.spinner("Training..."):
-                try:
-                    models = load_and_train(progress_cb=progress_cb)
-                    st.session_state.models = models
-                    st.success("✅ Model Ready!")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Error: {e}")
+        st.subheader("📊 Accuracy Test")
+        c1, c2 = st.columns(2)
+        c1.metric("RF Stylo",  f"{accuracy_score(models['y_test'],    y_pred_rf):.3f}")
+        c2.metric("SVM Fused", f"{accuracy_score(models['y_test_cb'], y_pred_fused):.3f}")
+
+    st.divider()
+    st.caption("Dataset: project-droid/DroidCollection\nModel: RF Stylometric + SVM Fused (CodeBERT + TF-IDF)")
+
     else:
         st.success("✅ Model is trained!")
         models = st.session_state.models
