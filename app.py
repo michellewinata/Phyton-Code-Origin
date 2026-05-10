@@ -25,9 +25,9 @@ def load_models():
     path = 'models.pkl'
     if not os.path.exists(path):
         gdown.download(
-            "https://drive.google.com/uc?id=1pvJUr5S8YhIbdK6kQBRFDFhKZ0DsdmG-",
+            "https://drive.google.com/uc?id=1Xp56MNMwQoMQFPgisNx2WdxUR0iMQSEk",
             path, quiet=False
-        )
+            )
     with open(path, 'rb') as f:
         return pickle.load(f)
 
