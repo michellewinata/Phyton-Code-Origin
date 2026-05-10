@@ -246,8 +246,8 @@ with st.sidebar:
 
         st.subheader("📊 Accuracy Test")
         c1, c2 = st.columns(2)
-        c1.metric("RF Stylo",  f"{accuracy_score(models['y_test'],    y_pred_rf):.3f}")
-        c2.metric("SVM Fused", f"{accuracy_score(models['y_test_cb'], y_pred_fused):.3f}")
+        c1.metric("RF Stylo",  f"{models['acc_rf']:.3f}")
+        c2.metric("SVM Fused", f"{models['acc_fused']:.3f}")
 
     st.divider()
     st.caption("Dataset: project-droid/DroidCollection\nModel: RF Stylometric + SVM Fused (CodeBERT + TF-IDF)")
