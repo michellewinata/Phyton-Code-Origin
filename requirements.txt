@@ -1,8 +1,5 @@
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.1.0+cpu
-transformers==4.38.0
-datasets
 scikit-learn
 pandas
 numpy
 streamlit
+gdown
