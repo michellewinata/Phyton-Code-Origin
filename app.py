@@ -173,21 +173,15 @@ def load_and_train(progress_cb=None):
 
 # Inference 
 def predict_code(code_snippet, models):
-    stylo        = pd.DataFrame([extract_stylometric(code_snippet)])
-    pred_rf      = int(models['rf'].predict(stylo.values)[0])
-
-    emb          = batch_embed([code_snippet], models['tokenizer'],
-                                models['codebert'], models['device'], batch_size=1)
-    tfidf_vec    = models['tfidf'].transform([code_snippet]).toarray()
-    stylo_scaled = models['scaler_cb'].transform(stylo.values)
-    fused        = np.hstack([emb, stylo_scaled, tfidf_vec])
-    pred_fused   = int(models['svm_fused'].predict(fused)[0])
+    stylo      = pd.DataFrame([extract_stylometric(code_snippet)])
+    pred_rf    = int(models['rf'].predict(stylo.values)[0])
+    pred_fused = int(models['svm_fused'].predict(stylo.values)[0])
 
     return {
         'RF_Stylometric': LABEL_NAMES[pred_rf],
         'SVM_Fused'     : LABEL_NAMES[pred_fused],
     }
-
+    
 # UI
 st.set_page_config(page_title="Code Origin Classifier", page_icon="🔍", layout="wide")
 
