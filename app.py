@@ -229,7 +229,7 @@ st.divider()
 # Sidebar
 with st.sidebar:
     st.header("⚙️ Setup Model")
-    
+
     if st.session_state.models is None:
         with st.spinner("Loading models..."):
             try:
@@ -238,13 +238,17 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Gagal load model: {e}")
     else:
+        models = st.session_state.models  # ← ini yang missing
+
+        st.success("✅ Model is ready!")
         st.subheader("📊 Accuracy Test")
         c1, c2 = st.columns(2)
         c1.metric("RF Stylo",  f"{models['acc_rf']:.3f}")
         c2.metric("SVM Fused", f"{models['acc_fused']:.3f}")
+
     st.divider()
     st.caption("Dataset: project-droid/DroidCollection\nModel: RF Stylometric + SVM Fused (CodeBERT + TF-IDF)")
-
+    
 # Main
 col_left, col_right = st.columns([3, 2], gap="large")
 
