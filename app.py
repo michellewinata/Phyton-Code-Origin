@@ -238,17 +238,10 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Gagal load model: {e}")
     else:
-        st.success("✅ Model is ready!")
-        models = st.session_state.models
-
-        y_pred_rf    = models['rf'].predict(models['X_test_s'])
-        y_pred_fused = models['svm_fused'].predict(models['X_test_fused'])
-
         st.subheader("📊 Accuracy Test")
         c1, c2 = st.columns(2)
         c1.metric("RF Stylo",  f"{models['acc_rf']:.3f}")
         c2.metric("SVM Fused", f"{models['acc_fused']:.3f}")
-
     st.divider()
     st.caption("Dataset: project-droid/DroidCollection\nModel: RF Stylometric + SVM Fused (CodeBERT + TF-IDF)")
 
