@@ -257,26 +257,6 @@ with st.sidebar:
     st.divider()
     st.caption("Dataset: project-droid/DroidCollection\nModel: RF Stylometric + SVM Fused (CodeBERT + TF-IDF)")
 
-    else:
-        st.success("✅ Model is trained!")
-        models = st.session_state.models
-
-        y_pred_rf    = models['rf'].predict(models['X_test_s'])
-        y_pred_fused = models['svm_fused'].predict(models['X_test_fused'])
-
-        st.subheader("📊 Accuracy Test")
-        c1, c2 = st.columns(2)
-        c1.metric("RF Stylo",  f"{accuracy_score(models['y_test'],    y_pred_rf):.3f}")
-        c2.metric("SVM Fused", f"{accuracy_score(models['y_test_cb'], y_pred_fused):.3f}")
-
-        if st.button("🔄 Retrain", use_container_width=True):
-            st.session_state.models = None
-            st.session_state.result = None
-            st.rerun()
-
-    st.divider()
-    st.caption("Dataset: project-droid/DroidCollection\nModel: RF Stylometric + SVM Fused (CodeBERT + TF-IDF)")
-
 # Main
 col_left, col_right = st.columns([3, 2], gap="large")
 
