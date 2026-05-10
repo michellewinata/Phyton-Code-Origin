@@ -174,8 +174,9 @@ def load_and_train(progress_cb=None):
 # Inference 
 def predict_code(code_snippet, models):
     stylo      = pd.DataFrame([extract_stylometric(code_snippet)])
+    
     pred_rf    = int(models['rf'].predict(stylo.values)[0])
-    pred_fused = int(models['svm_fused'].predict(stylo.values)[0])
+    pred_fused = int(models['rf'].predict(stylo.values)[0])
 
     return {
         'RF_Stylometric': LABEL_NAMES[pred_rf],
