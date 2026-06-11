@@ -17,6 +17,7 @@ https://huggingface.co/datasets/project-droid/DroidCollection
 - SVM (Stylometric)
 - Random Forest (Stylometric)
 - SVM + CodeBERT
+- RF + CodeBERT
 - SVM + Fused Features
 - Random Forest + Fused Features
 
